@@ -3,6 +3,7 @@ package com.driver.services.impl;
 import com.driver.model.*;
 import com.driver.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.driver.repository.CustomerRepository;
@@ -10,6 +11,8 @@ import com.driver.repository.DriverRepository;
 import com.driver.repository.TripBookingRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -46,9 +49,45 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public TripBooking bookTrip(int customerId, String fromLocation, String toLocation, int distanceInKm) throws Exception{
-		//Book the driver with lowest driverId who is free (cab available variable is Boolean.TRUE). If no driver is available, throw "No cab available!" exception
+		//Book the driver with lowest driverId who is free (cab available variable is Boolean.TRUE).
+		// If no driver is available, throw "No cab available!" exception
 		//Avoid using SQL query
-return null;
+		Customer customer = customerRepository2.findById(customerId).get();
+		List<Driver> driverList = driverRepository2.findAll();
+		Collections.sort(driverList, Comparator.comparing(Driver::getDriverId));
+		Driver driverForTrip = null;
+		for(Driver driver:driverList)
+		{
+			if (driver.getCab().getAvailable())
+			{
+				driverForTrip = driver;
+				break;
+			}
+		}
+		if (driverForTrip == null) throw new Exception("No cab available!");
+
+		Cab cab = driverForTrip.getCab();
+		cab.setAvailable(false);
+
+		int bill = distanceInKm * cab.getPerKmRate();
+
+		TripBooking tripBooking = new TripBooking();
+		tripBooking.setDriver(driverForTrip);
+		tripBooking.setCustomer(customer);
+		tripBooking.setFromLocation(fromLocation);
+		tripBooking.setToLocation(toLocation);
+		tripBooking.setDistanceInKm(distanceInKm);
+		tripBooking.setBill(bill);
+		tripBooking.setStatus(TripStatus.CONFIRMED);
+
+		List<TripBooking> tripBookingList = driverForTrip.getTripBookingList();
+		tripBookingList.add(tripBooking);
+		driverForTrip.setTripBookingList(tripBookingList);
+
+		tripBookingRepository2.save(tripBooking);
+
+
+return tripBooking;
 	}
 
 	@Override
