@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.driver.model.Driver;
 import com.driver.repository.DriverRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,8 +36,11 @@ public class DriverServiceImpl implements DriverService {
 		cab.setAvailable(true);
 		cab.setPerKmRate(10);
 		cab.setDriver(driver);
-
 		driver.setCab(cab);
+
+		List<TripBooking> tripBookingList = new ArrayList<>();
+		driver.setTripBookingList(tripBookingList);
+
 		driverRepository3.save(driver);
 
 	}
