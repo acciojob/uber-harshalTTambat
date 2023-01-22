@@ -54,7 +54,7 @@ public class CustomerServiceImpl implements CustomerService {
 		//Avoid using SQL query
 		Customer customer = customerRepository2.findById(customerId).get();
 		List<Driver> driverList = driverRepository2.findAll();
-		Collections.sort(driverList, Comparator.comparing(Driver::getDriverId));
+		Collections.sort(driverList, (a, b)-> a.getDriverId()-b.getDriverId());
 		Driver driverForTrip = null;
 		for(Driver driver:driverList)
 		{
@@ -84,7 +84,6 @@ public class CustomerServiceImpl implements CustomerService {
 		tripBookingList.add(tripBooking);
 		driverForTrip.setTripBookingList(tripBookingList);
 
-		tripBookingRepository2.save(tripBooking);
 		customerRepository2.save(customer);
 		driverRepository2.save(driverForTrip);
 
