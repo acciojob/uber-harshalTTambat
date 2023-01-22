@@ -1,13 +1,17 @@
 package com.driver.services.impl;
 
 import com.driver.model.Cab;
+import com.driver.model.TripBooking;
 import com.driver.repository.CabRepository;
+import com.driver.repository.TripBookingRepository;
 import com.driver.services.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.driver.model.Driver;
 import com.driver.repository.DriverRepository;
+
+import java.util.List;
 
 @Service
 public class DriverServiceImpl implements DriverService {
@@ -17,6 +21,8 @@ public class DriverServiceImpl implements DriverService {
 
 	@Autowired
 	CabRepository cabRepository3;
+	@Autowired
+	TripBookingRepository tripBookingRepository;
 
 	@Override
 	public void register(String mobile, String password){
@@ -24,6 +30,15 @@ public class DriverServiceImpl implements DriverService {
 		Driver driver = new Driver();
 		driver.setMobile(mobile);
 		driver.setPassword(password);
+
+		Cab cab = new Cab();
+		cab.setAvailable(true);
+		cab.setPerKmRate(10);
+		cab.setDriver(driver);
+
+		driver.setCab(cab);
+		driverRepository3.save(driver);
+
 	}
 
 	@Override
@@ -36,6 +51,15 @@ public class DriverServiceImpl implements DriverService {
 	@Override
 	public void updateStatus(int driverId){
 		//Set the status of respective car to unavailable
+		Driver driver = driverRepository3.findById(driverId).get();
+		Cab cab = driver.getCab();
+		if (cab.getAvailable()==true)
+		{
+			cab.setAvailable(false);
+		}
+		else cab.setAvailable(true);
+		driverRepository3.save(driver);
+		cabRepository3.save(cab);
 
 	}
 }
