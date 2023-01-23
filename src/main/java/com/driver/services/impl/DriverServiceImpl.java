@@ -39,7 +39,7 @@ public class DriverServiceImpl implements DriverService {
 		driver.setCab(cab);
 
 		List<TripBooking> tripBookingList = new ArrayList<>();
-		driver.setTripBookingList(tripBookingList);
+		driver.setDriverTripBookingList(tripBookingList);
 
 		driverRepository3.save(driver);
 

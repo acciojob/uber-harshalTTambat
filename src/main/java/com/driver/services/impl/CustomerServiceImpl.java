@@ -43,8 +43,10 @@ public class CustomerServiceImpl implements CustomerService {
 			int checkId = customer.getCustomerId();
 			if(checkId == customerId)
 				customerRepository2.delete(customer);
+
 			break;
 		}
+
 	}
 
 	@Override
@@ -80,9 +82,9 @@ public class CustomerServiceImpl implements CustomerService {
 		tripBooking.setBill(bill);
 		tripBooking.setStatus(TripStatus.CONFIRMED);
 
-		List<TripBooking> tripBookingList = driverForTrip.getTripBookingList();
+		List<TripBooking> tripBookingList = driverForTrip.getDriverTripBookingList();
 		tripBookingList.add(tripBooking);
-		driverForTrip.setTripBookingList(tripBookingList);
+		driverForTrip.setDriverTripBookingList(tripBookingList);
 
 		customerRepository2.save(customer);
 		driverRepository2.save(driverForTrip);
