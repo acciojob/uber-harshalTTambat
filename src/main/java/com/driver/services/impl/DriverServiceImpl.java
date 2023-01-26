@@ -33,7 +33,7 @@ public class DriverServiceImpl implements DriverService {
 		driver.setPassword(password);
 
 		Cab cab = new Cab();
-		cab.setAvailable(true);
+		cab.setAvailable(Boolean.TRUE);
 		cab.setPerKmRate(10);
 		cab.setDriver(driver);
 		driver.setCab(cab);
@@ -57,12 +57,8 @@ public class DriverServiceImpl implements DriverService {
 		//Set the status of respective car to unavailable
 		Driver driver = driverRepository3.findById(driverId).get();
 		Cab cab = driver.getCab();
-		if (cab.getAvailable()==true)
-		{
-			cab.setAvailable(false);
-		}
-		else cab.setAvailable(true);
-		driverRepository3.save(driver);
+		cab.setAvailable(Boolean.FALSE);
+
 		cabRepository3.save(cab);
 
 	}
